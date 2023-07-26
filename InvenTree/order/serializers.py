@@ -183,12 +183,12 @@ class PurchaseOrderSerializer(TotalPriceMixin, AbstractOrderSerializer, InvenTre
             'supplier_reference',
             'total_price',
             'order_currency',
+            'creation_date',
         ])
 
         read_only_fields = [
             'issue_date',
             'complete_date',
-            'creation_date',
         ]
 
         extra_kwargs = {

@@ -107,6 +107,9 @@ function purchaseOrderFields(options={}) {
         order_currency: {
             icon: 'fa-coins',
         },
+        creation_date: {
+            icon: 'fa-calendar-alt',
+        },
         target_date: {
             icon: 'fa-calendar-alt',
         },
