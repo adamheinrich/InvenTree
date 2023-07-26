@@ -66,10 +66,11 @@ class MetaMixin(models.Model):
         """Meta options for MetaMixin."""
         abstract = True
 
+    # TODO: Switch to editable updated field only in StockItem?
     updated = models.DateTimeField(
         verbose_name=_('Updated'),
         help_text=_('Timestamp of last update'),
-        auto_now=True,
+        default=datetime.now,
         null=True,
     )
 

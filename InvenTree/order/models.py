@@ -608,6 +608,13 @@ class PurchaseOrder(TotalPriceMixin, Order):
         if barcode is None:
             barcode = ''
 
+        # Extract optionalreceived_date field
+        received_date = kwargs.get('received_date', None)
+
+        # Prevent null values for received_date
+        if received_date is None:
+            received_date = datetime.now()
+
         if self.status != PurchaseOrderStatus.PLACED:
             raise ValidationError(
                 "Lines can only be received against an order marked as 'PLACED'"
@@ -655,7 +662,8 @@ class PurchaseOrder(TotalPriceMixin, Order):
                     status=status,
                     batch=batch_code,
                     serial=sn,
-                    purchase_price=unit_purchase_price
+                    purchase_price=unit_purchase_price,
+                    updated=received_date
                 )
 
                 # Assign the provided barcode
@@ -679,7 +687,8 @@ class PurchaseOrder(TotalPriceMixin, Order):
                     deltas=tracking_info,
                     location=location,
                     purchaseorder=self,
-                    quantity=quantity
+                    quantity=quantity,
+                    date=received_date
                 )
 
         # Update the number of parts received against the particular line item

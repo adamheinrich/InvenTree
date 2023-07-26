@@ -601,6 +601,7 @@ class PurchaseOrderReceiveSerializer(serializers.Serializer):
         fields = [
             'items',
             'location',
+            'received_date',
         ]
 
     items = PurchaseOrderLineItemReceiveSerializer(many=True)
@@ -611,6 +612,14 @@ class PurchaseOrderReceiveSerializer(serializers.Serializer):
         allow_null=True,
         label=_('Location'),
         help_text=_('Select destination location for received items'),
+    )
+
+    # TODO: default to datetime.now()?
+    received_date = serializers.DateField(
+        required=False,
+        allow_null=True,
+        label=_('Received date'),
+        help_text=_('Select date when the line item was received (or keep empty for now)'),
     )
 
     def validate(self, data):
@@ -670,6 +679,12 @@ class PurchaseOrderReceiveSerializer(serializers.Serializer):
         items = data['items']
         location = data.get('location', None)
 
+        received_date = data.get('received_date', None)
+
+        # TODO: Is this needed?
+        if received_date is None:
+            received_date = datetime.now()
+
         # Now we can actually receive the items into stock
         with transaction.atomic():
             for item in items:
@@ -687,6 +702,7 @@ class PurchaseOrderReceiveSerializer(serializers.Serializer):
                         barcode=item.get('barcode', ''),
                         batch_code=item.get('batch_code', ''),
                         serials=item.get('serials', None),
+                        received_date=received_date,
                     )
                 except (ValidationError, DjangoValidationError) as exc:
                     # Catch model errors and re-throw as DRF errors

@@ -1344,11 +1344,16 @@ class StockItem(InvenTreeBarcodeMixin, InvenTreeNotesMixin, MetadataMixin, commo
         if quantity:
             deltas['quantity'] = float(quantity)
 
+        # Received date specified?
+        date = kwargs.get('date', None)
+        if not date:
+            date = datetime.now()
+
         entry = StockItemTracking.objects.create(
             item=self,
             tracking_type=entry_type.value,
             user=user,
-            date=datetime.now(),
+            date=date,
             notes=notes,
             deltas=deltas,
         )
@@ -2152,7 +2157,7 @@ class StockItemTracking(models.Model):
         related_name='tracking_info'
     )
 
-    date = models.DateTimeField(auto_now_add=True, editable=False)
+    date = models.DateTimeField(default=datetime.now)
 
     notes = models.CharField(
         blank=True, null=True,

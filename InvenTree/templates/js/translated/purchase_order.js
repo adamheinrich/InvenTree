@@ -1308,6 +1308,9 @@ function receivePurchaseOrderItems(order_id, line_items, options={}) {
                     structural: false,
                 }
             },
+            received_date: {
+                icon: 'fa-calendar-alt',
+            },
         },
         preFormContent: html,
         confirm: true,
@@ -1423,6 +1426,7 @@ function receivePurchaseOrderItems(order_id, line_items, options={}) {
             var data = {
                 items: [],
                 location: getFormFieldValue('location', {}, opts),
+                received_date: getFormFieldValue('received_date', {}, opts),
             };
 
             var item_pk_values = [];
